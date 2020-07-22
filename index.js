@@ -1,6 +1,7 @@
 var express = require('express');
 const bodyParser = require('body-parser');
 const MongoClient = require('mongodb').MongoClient;
+var app = express();
 let http = require('http').Server(app);
 app.use(bodyParser.json());
 
