@@ -5,7 +5,7 @@ app.use(bodyParser.json());
 
 const uri = `mongodb+srv://vivekuser:vivekadmin@cluster0-mfrcr.mongodb.net/shorturl02?retryWrites=true&w=majority`;
 
-
+const port = process.env.PORT || 3000;
 
 
 app.post("/register", function (req, res) {
@@ -45,3 +45,6 @@ app.post("/register", function (req, res) {
     });
 });
 
+app.listen(port, () => {
+    console.log("app listing in port " + port);
+  });
