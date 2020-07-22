@@ -1,11 +1,16 @@
 var express = require('express');
 const bodyParser = require('body-parser');
+var bcrypt = require('bcrypt');
 const MongoClient = require('mongodb').MongoClient;
 var app = express();
 let http = require('http').Server(app);
 app.use(bodyParser.json());
 
 const uri = `mongodb+srv://vivekuser:vivekadmin@cluster0-mfrcr.mongodb.net/shorturl02?retryWrites=true&w=majority`;
+
+app.get("/", function (req, res) {
+    res.send(`welcome to CRM`);
+  });
 
 const port = process.env.PORT || 3000;
 
@@ -39,6 +44,7 @@ app.post("/register", function (req, res) {
                     console.log(testObj);
                     dbObject.collection("register").insertOne(testObj, function (err, resp) {
                         if (err) throw err;
+                        res.end("Email Registered");
                         db.close();
                     });
                 });
@@ -55,9 +61,9 @@ app.post("/login", function (req, res) {
         })
     }
     else{
-        client.connect(function(err,client){
+        client.connect(function(err,db){
             if (err) throw err;
-            var dbObject = db.db("crmdb");
+            var db = db.db("crmdb");
             db.collection("users").findOne({ email: req.body.email }, (err, data) => {
                 if (err) throw err;
                 if(data){
