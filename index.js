@@ -45,6 +45,47 @@ app.post("/register", function (req, res) {
     });
 });
 
+app.post("/login", function (req, res) {
+    const client = new MongoClient(uri, { useNewUrlParser: true });
+    if (req.body.email == undefined || req.body.pass == undefined) {
+        res.status(400).json({
+            message: "E-mail or password missing"
+        })
+    }
+    else{
+        client.connect(function(err,client){
+            if (err) throw err;
+            var dbObject = db.db("crmdb");
+            db.collection("users").findOne({ email: req.body.email }, (err, data) => {
+                if (err) throw err;
+                if(data){
+                    bcrypt.compare(req.body.password, data.password, function(err, result){ 
+                        if (result) {
+                            client.close();
+                            res.status(200).json({
+                                message: "login successfull"
+                            })
+                        } else {
+                            client.close();
+                            res.status(401).json({
+                                message: "password incorrect"
+                            })
+                        }
+
+                    });
+                }else {
+                    client.close();
+                    res.status(400).json({
+                        "message": "user not found"
+                    })
+                }
+            })
+        })
+    }    
+});
+
+
+
 app.listen(port, () => {
     console.log("app listing in port " + port);
   });
