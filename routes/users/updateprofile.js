@@ -15,24 +15,24 @@ let dbURL = process.env.dbURL;
 let authenticate = require('../../middlewares/authentication.js');
 let accessVerification = require('../../middlewares/accessVerification.js');
 
-// deletecontact route.
-router.delete('/:id', [authenticate, accessVerification("delete")], async(req, res) => {
-    let contactId = req.params.id;
-    if (contactId === undefined) {
+// updateprofile route.
+router.put('/', [authenticate], async(req, res) => {
+    let { _id } = req.body;
+    if (_id === undefined) {
         res.status(400).json({
             message: 'Required Fields missing'
         });
     } else {
-        let client = await mongodb.connect(dbURL).catch(err => { throw err });
+        let client = await mongodb.connect(dbURL, { useUnifiedTopology: true }).catch(err => { throw err });
         let company = req.email.split("@");
         company = company[1].split(".")[0];
         let db = client.db(company);
-        contactId = new ObjectId(contactId);
-        delete req.body.contactId;
-        await db.collection('contacts').deleteOne({ "_id": contactId }).catch(err => { throw err });
+        _id = new ObjectId(_id);
+        delete req.body['_id'];
+        await db.collection('users').updateOne({ _id }, { $set: req.body }).catch(err => { throw err });
         client.close();
         res.status(200).json({
-            message: 'Contact deleted'
+            message: 'Profile updated'
         });
     }
 });

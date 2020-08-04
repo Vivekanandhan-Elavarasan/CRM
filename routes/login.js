@@ -27,8 +27,10 @@ router.post("/", async(req, res) => {
         });
     } else {
         let client = await mongodb.connect(dbURL, { useUnifiedTopology: true }).catch(err => { throw err; });
-        let db = client.db('crm');
-        let data = await db.collection('users').findOne({ email }).catch(err => { throw err; });
+        let company = email.split("@");
+        company = company[1].split(".")[0];
+        let db = client.db(company);
+        let data = await db.collection('users').findOne({ email }, { projection: { verificationToken: 0, passwordResetToken: 0 } }).catch(err => { throw err; });
         if (data) {
             if (data.accountVerified) {
                 bcrypt.compare(password, data.password, function(err, result) {
@@ -38,12 +40,18 @@ router.post("/", async(req, res) => {
                         jwt.sign({ id: data["_id"], email: data["email"], userType: data["userType"], accessRights: data['accessRights'] }, 'qwertyuiopasdfghjkl', function(err, token) {
                             if (err) throw err;
                             client.close();
-                            console.log("login successfull")
+                            console.log("login successfull");
+                            delete data['password'];
+                            delete data['dbName'];
+                            delete data['isRootUser'];
                             res.status(200).json({
                                 message: "login successfull",
                                 token,
                                 email,
-                                userType: data["userType"]
+                                userType: data["userType"],
+                                isRootUser: data["isRootUser"],
+                                company: data["company"],
+                                data
                             })
                         });
                     } else {

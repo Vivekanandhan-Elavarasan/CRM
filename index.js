@@ -52,6 +52,11 @@ let updatelead = require('./routes/leads/updatelead.js');
 let deletelead = require('./routes/leads/deletelead.js');
 let listlead = require('./routes/leads/listlead.js');
 let updateleadstatus = require('./routes/leads/updateleadstatus.js');
+let leadconfirmed = require('./routes/leads/leadconfirmed.js');
+let orderconfirmed = require('./routes/leads/orderconfirmed.js');
+let ordercancelled = require('./routes/leads/ordercancelled.js');
+let managercancelled = require('./routes/leads/managercancelled.js');
+let managerconfirmed = require('./routes/leads/managerconfirmed.js');
 
 let createcontact = require('./routes/contacts/createcontact.js');
 let updatecontact = require('./routes/contacts/updatecontact.js');
@@ -59,6 +64,11 @@ let deletecontact = require('./routes/contacts/deletecontact.js');
 let listcontacts = require('./routes/contacts/listcontacts.js');
 
 let getallusers = require('./routes/users/getallusers.js');
+let updateaccessrights = require('./routes/users/updateaccessrights.js');
+let deleteuser = require('./routes/users/deleteuser.js');
+let updateprofile = require('./routes/users/updateprofile.js');
+let changepassword = require('./routes/users/changepassword.js');
+let updateusertype = require('./routes/users/updateusertype.js');
 
 //routes
 app.use('/login', login);
@@ -72,6 +82,11 @@ app.use('/updatelead', updatelead);
 app.use('/updateleadstatus', updateleadstatus);
 app.use('/deletelead', deletelead);
 app.use('/listlead', listlead);
+app.use('/leadconfirmed', leadconfirmed);
+app.use('/orderconfirmed', orderconfirmed);
+app.use('/ordercancelled', ordercancelled);
+app.use('/managercancelled', managercancelled);
+app.use('/managerconfirmed', managerconfirmed);
 //routes-contacts
 app.use('/createcontact', createcontact);
 app.use('/updatecontact', updatecontact);
@@ -80,3 +95,8 @@ app.use('/listcontacts', listcontacts);
 
 //routes-users
 app.use('/getallusers', getallusers);
+app.use('/updateaccessrights', updateaccessrights);
+app.use('/deleteuser', deleteuser);
+app.use('/updateprofile', updateprofile);
+app.use('/changepassword', changepassword);
+app.use('/updateusertype', updateusertype);
